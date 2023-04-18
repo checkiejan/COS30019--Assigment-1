@@ -67,20 +67,9 @@ class Grid:
     def draw(self):
         for cell in self.grid:
             cell.draw(self.screen)
-            
-    def drawSearch(self,func):
-        func(self)
-        
+                    
     def drawNode(self,node):
         node.draw(self.screen)
         pygame.time.delay(65)
         pygame.display.update()
                 
-            
-            
-        
-    
-            
-    
-        
-    
