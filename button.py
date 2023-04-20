@@ -1,7 +1,6 @@
 import pygame
 pygame.font.init() # you have to call this at the start, 
                    # if you want to use this module.
-my_font = pygame.font.SysFont('Comic Sans MS', 10)
 my_font = pygame.font.Font(None, 30)
 class Button:
     def __init__(self,x,y,width,height,text):

@@ -8,6 +8,7 @@ class Cell:
         self.start = False
         self.visited = False
         self.onPath = False
+        self.frontier = False
         self.width = 40
         self.row = self.width * self.x +20
         self.column = self.width * self.y +20
@@ -28,6 +29,9 @@ class Cell:
     def setOnPath(self,value):
         self.onPath = value
         
+    def setFrontier(self,value):
+        self.frontier = value
+                
     def isStart(self):
         return self.start
     
@@ -43,9 +47,13 @@ class Cell:
     def isOnPath(self):
         return self.onPath
     
+    def isOnFrontier(self):
+        return self.frontier
+    
     def reset(self):
         self.visited = False
         self.onPath = False
+        self.frontier = False
         
     def __str__(self):
         return f'row: {self.y}, col: {self.x}, goal: {self.goal}, wall: {self.wall}, start: {self.start}'
@@ -72,6 +80,11 @@ class Cell:
            # pygame.draw.rect(screen, (216, 216, 216), (self.row + self.padding, self.column + self.padding, self.width - self.padding*2, self.width- self.padding*2))
             pygame.draw.rect(screen, (135, 203, 185), (self.row + self.padding, self.column + self.padding, self.width - self.padding*2, self.width- self.padding*2))
 
+            return
+        
+        if self.isOnFrontier():
+           # pygame.draw.rect(screen, (216, 216, 216), (self.row + self.padding, self.column + self.padding, self.width - self.padding*2, self.width- self.padding*2))
+            pygame.draw.rect(screen, (246, 186, 111), (self.row + self.padding, self.column + self.padding, self.width - self.padding*2, self.width- self.padding*2))
             return
 
         

@@ -4,9 +4,8 @@ from cell import Cell
 from grid import Grid
 from button import Button
 import pygame
-from search import *
+from algo import *
 import sys
-
 screen_width = 800
 screen_height = 800
 W,H = 0,0
@@ -24,7 +23,7 @@ def getWH(lst): #set number of rows and columns for the grid
     W, H= list(map(int,lst.split(','))) #split it by commma then map the values into W and H
     
 def createButtons(lst):
-        y = 400
+        y = 500
         width = 70
         height = 40
         padding = 30
@@ -54,8 +53,7 @@ def createButtons(lst):
         cus2.setSearch(CUS2search)
         lst.append(cus2)
       
-
-with open("map.txt","r") as f: 
+with open(sys.argv[1],"r") as f: 
     lst = f.readline().strip("[\n]") # get rip of \n character
     getWH(lst) #get width, height of the map
     grid = Grid(W,H)
@@ -71,24 +69,27 @@ with open("map.txt","r") as f:
         lst= list(map(int,line.strip("(\n)").split(","))) # get position of the wall cells
         grid.setWallCells(lst) 
         
-method = ["bfs",'dfs',"as","gbfs","cus1","cus2"]
-if len(sys.argv) == 2:
-    method = sys.argv[1].lower()
-    if method in method:
+methods = ["bfs",'dfs',"as","gbfs","cus1","cus2","dfsr"]
+if len(sys.argv) == 3:
+    method = sys.argv[2].lower()
+    
+    if method in methods:
         t = None
         if method == "bfs":
-            t = BFSsearch(grid,False)
+            t,node = BFSsearch(grid,False)
         elif method == "dfs":
-            t = DFSsearch(grid,False)
+            t,node = DFSsearch(grid,False)
         elif method == "as":
-            t = ASsearch(grid,False)
+            t,node = ASsearch(grid,False)
+        elif method == "dfsr":
+            t,node = DFSRecursivesearch(grid,False)
         elif method == "gbfs":
-            t = GBFSsearch(grid,False)
+            t,node = GBFSsearch(grid,False)
         elif method == "cus1":
-            t = CUS1search(grid,False)
+            t,node = CUS1search(grid,False)
         elif method == "cus2":
-            t = CUS2search(grid,False)
-        print(f'main.py {method}')
+            t,node = CUS2search(grid,False)
+        print(f'{sys.argv[1]} {method} {node}')
         print(encodePath(t))
     else:
         print("Unknown method")
@@ -107,6 +108,7 @@ else:
     drawPath = False
     path = None
     strategy = None
+    name = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -120,11 +122,14 @@ else:
                         grid.resetGrid()
                         search = True
                         strategy = button.search()
+                        name = button.text.lower()
                         break
         screen.fill((255, 255, 255))
         grid.draw()
         if search and strategy is not None:
-            path = strategy(grid)
+            path,node = strategy(grid)
+            print(f'{sys.argv[1]} {name} {node}')
+            print(encodePath(path))
             search = False
             drawPath = True
         if drawPath and path is not None:

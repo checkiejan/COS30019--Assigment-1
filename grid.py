@@ -52,10 +52,11 @@ class Grid:
             cell = self.locateCell(coord[1], coord[0])
             cell.setGoal(True)
         
-    def resetGrid(self):
+    def resetGrid(self, draw = True):
         for cell in self.grid:
             cell.reset()
-            
+        if draw:
+            self.draw()
     def createCells(self):
         for x in range(self.cols):
             for y in range(self.rows):
@@ -70,6 +71,6 @@ class Grid:
                     
     def drawNode(self,node):
         node.draw(self.screen)
-        pygame.time.delay(65)
+        pygame.time.delay(10)
         pygame.display.update()
                 

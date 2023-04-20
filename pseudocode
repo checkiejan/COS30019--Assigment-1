@@ -1,0 +1,181 @@
+procedure BFSsearch(grid):
+    startCell = grid.locateStartCell() 
+    goalCells = grid.locateGoalCells() 
+    path = []
+    moves = [(0,-1),(-1,0),(0,1),(1,0)] 
+    queue = Queue()
+    queue.append(startCell)
+    visited = {startCell: [startCell]} 
+    while queue is not empty: 
+        current = queue.pop(0)
+        if current in goalCells:
+            path = visited[current]
+            return path
+        for move in moves:
+            nextNode = grid.locateCellCoord(move[0]+current.x, move[1]+current.y)
+            if nextNode is None or nextNode in visited or nextNode.isWall(): 
+                continue                        
+            visited[nextNode] = visited[current] + [nextNode] 
+            queue.append(nextNode)
+            
+            if draw: #visualise when required
+                nextNode.setFrontier(True)
+                grid.drawNode(nextNode)
+    end while
+    return None
+end procedure   
+
+procedure ASsearch(grid):
+    startCell = grid.locateStartCell()
+    queue = PriorityQueue()
+    queue.push((0,startCell))
+    path = {startCell: [startCell]} 
+	cost = {startCell: 0}
+    while queue is not empty: 
+        current = queue.pop() 
+        if current is goalCell: 
+            return path[current]
+        end if
+        adjancents = grid.locateNeighbours(current)
+        for adjacent in adjancents:
+            if adjacnet.isVisited == true or adjacent.isWall == true: 
+                continue   
+            end if
+    		newCost = cost[current] +1
+    		if adjacent not in cost or newCost < cost[adjacent]:
+      		  cost[adjacent] = newCost
+              priority = newCost + heuristic(adjacent, grid.goalCelss)
+			  queue.push((priority, adjacent))
+              path[adjacent] = path[current] + [adjacent] 
+            end if
+        end for
+    end while
+    return None
+end procedure 
+
+procedure Bidirectionalsearch(grid):
+    startCell = grid.locateStartCell()
+    goalCells = grid.locateGoalCells()
+    while goalCells is not empty:
+		forwardQueue = Queue()
+        forwardQueue.append(startCell)
+        forwardVisited = {startCell: [startCell]} #the list is the path to the cell
+        
+        backwardQueue = Queue()
+        goalCell = goalCells.pop(0)
+        backwardQueue.append(goalCell)
+        backwardVisited = {goalCell: [goalCell]} #choose the first goal cell in the cell list
+    	visitedIntersection = None
+    	while forwardQueue is not empty and backwardQueue is not empty:
+			forward = forwardQueue.pop()
+			adjacents = grid.locateNeighbours(forward):
+        	for adjacents in adjancents:
+          		if adjacnet in forwwardVisited or adjacent.isWall == true: 
+                	continue   
+        		end if
+        		forwardQueue.append(adjacent)
+        		forwwardVisited[adjacent] = forwardVisited[forward] + [adjacent]
+        		if adjacent in backwardVisited:
+          			visitedIntersection = adjacent
+         			break
+          		end if
+          	end for
+        	if visitedIntersection is not None:
+          		break
+        	end if
+        
+        	backward = backwardQueue.pop()
+			adjacents = grid.locateNeighbours(backward):
+        	for adjacents in adjancents:
+          		if adjacnet in backwardVisited or adjacent.isWall == true: 
+                	continue   
+        		end if
+        		backwardQueue.append(adjacent)
+        		backwardVisited[adjacent] = backwardVisited[forward] + [adjacent]
+        		if adjacent in forwardVisited:
+          			visitedIntersection = adjacent
+         			break
+          		end if
+          	end for
+        	if visitedIntersection is not None:
+          		break
+        	end if
+		end while
+        if visitedIntersection is not None:
+          		path = forwardVisited[visitedIntersection] + backwardVisited[visitedIntersection].reverse()
+            	return path
+        end if
+	end while
+    return None
+end procedure 
+
+
+procedure BidirectionalASSearch(grid):
+    startCell = grid.locateStartCell()
+    goalCells = grid.locateGoalCells()
+    goalCell.sort(heuristic) //sort based on the heuristic value between the goal and the initial point
+    while goalCells is not empty:
+		forwardQueue = PriorityQueue()
+        forwardQueue.append((0,startCell))
+        forwardVisited = {startCell: [startCell]} #the list is the path to the cell
+        forwardCost = {startCell: 0}
+
+        backwardQueue = PriorityQueue()
+        goalCell = goalCells.pop(0)
+        backwardQueue.append((0,goalCell))
+        backwardVisited = {goalCell: [goalCell]} #choose the first goal cell in the cell list
+        backwardCost = {goalCell: 0}
+
+    	visitedIntersection = None
+    	while forwardQueue is not empty and backwardQueue is not empty:
+			forward = forwardQueue.pop()
+			adjacents = grid.locateNeighbours(forward):
+        	for adjacent in adjancents:
+          		if adjacent in forwwardVisited or adjacent.isWall == true: 
+                	continue   
+        		end if
+                newCost = forwardCost[forward] + 1
+                if adjacent not in forwardCost or newCost < forwardCost[adjacent]:
+                    forwardCost[adjacent] = newCost
+                    priority = newCost + heuristic(adjacent, goalCell)
+                    forwwardVisited[adjacent] = forwardVisited[forward] + [adjacent]
+                    forwardQueue.push((priority, adjacent))
+                end if
+                if adjacent in backwardVisited:
+                   visitedIntersection = adjacent
+                break
+            end if
+          	end for
+        	if visitedIntersection is not None:
+          		break
+        	end if
+        
+        	backward = backwardQueue.pop()
+			adjacents = grid.locateNeighbours(backward):
+        	for adjacents in adjancents:
+          		if adjacnet in backwardVisited or adjacent.isWall == true: 
+                	continue   
+        		end if
+                newCost = backwardCost[backward] + 1
+                if adjacent not in backwardCost or newCost < backwardCost[adjacent]:
+                    backwardCost[adjacent] = newCost
+                    priority = newCost + heuristic(adjacent, goalCell)
+                    backwardVisited[adjacent] = backwardVisited[backward] + [adjacent]
+                    backwardQueue.push((priority, adjacent))
+                end if
+        		if adjacent in forwardVisited:
+          			visitedIntersection = adjacent
+         			break
+          		end if
+          	end for
+        	if visitedIntersection is not None:
+          		break
+        	end if
+		end while
+        if visitedIntersection is not None:
+          		path = forwardVisited[visitedIntersection] + backwardVisited[visitedIntersection].reverse()
+            	return path
+        end if
+	end while
+    return None
+end procedure 
