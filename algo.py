@@ -10,7 +10,7 @@ def BFSsearch(grid,draw=True):
     queue = deque() #queue for cell
     queue.append(startCell)
     visited = {startCell: [startCell]} # visited dictionary to store the parent nodes
-    node = 1
+    node = 1 #count node
     while queue: #while queue not empty
         current = queue.popleft() #pop the first element
         
@@ -39,7 +39,7 @@ def BFSsearch(grid,draw=True):
 def DFSRecursivesearch(grid, draw= True):
     startCell = grid.locateStartCell() #locate the start cell from grid
     goalCells = grid.locateGoalCells() #locate all goal cells from grid
-    class Node:
+    class Node: #count node
         def __init__(self):
             self.value =1
     node = Node()
@@ -83,7 +83,7 @@ def DFSsearch(grid,draw=True):
     queue = [] #queue for cell
     queue.append(startCell)
     visited = {startCell: [startCell]} # visited dictionary to store the parent nodes
-    node = 1
+    node = 1 #count node
     while queue: #while queue not empty
         current = queue.pop() #pop the first element
         current.setVisited(True)
@@ -111,7 +111,7 @@ def DFSsearch(grid,draw=True):
 def ASsearch(grid, draw = True):
     startCell = grid.locateStartCell() #locate the start cell from grid
     goalCells = grid.locateGoalCells() #locate all goal cells from grid
-    node = 1
+    node = 1 #count node
     moves = [[0, -1], [-1, 0], [0, 1], [1, 0]] #up, left, down, right
     def manhattanDistance(a,goals): #heuristic function
         result = abs(a.x -goals[0].x) + abs(a.y -goals[0].y) #return the smallest distance to any of the goal cell
@@ -180,7 +180,7 @@ def ASsearch(grid, draw = True):
 def GBFSsearch(grid, draw = True):
     startCell = grid.locateStartCell() #locate the start cell from grid
     goalCells = grid.locateGoalCells() #locate all goal cells from grid
-    node = 1
+    node = 1 #count node
     moves = [[0, -1], [-1, 0], [0, 1], [1, 0]] #up, left, down, right
     def manhattanDistance(a,goals): #heuristic function
         result = abs(a.x -goals[0].x) + abs(a.y -goals[0].y) #return the smallest distance to any of the goal cell
@@ -247,7 +247,7 @@ def CUS1search(grid, draw = True): #uninformed search is bidirectional search
     path = []
     goalCells = grid.locateGoalCells()
     moves = [(0,-1),(-1,0),(0,1),(1,0)]
-    node = 2
+    node = 2 #count node
     while goalCells: #search through all possible goals until find a path, otherwise return none
         forwardQueue = deque()
         forwardQueue.append(startCell)
@@ -318,7 +318,7 @@ def CUS1search(grid, draw = True): #uninformed search is bidirectional search
     return None, node
 
 def CUS2search(grid, draw = True):
-    def manhattanDistance(a,b):
+    def manhattanDistance(a,b): #herusitic function between 2 points
         result = abs(a.x -b.x) + abs(a.y -b.y)
         return result
     def manhattanDistance1(a,goals): #heuristic function
@@ -335,18 +335,18 @@ def CUS2search(grid, draw = True):
             self.count = count
         
         def __lt__(self, other):
-            if self.priority == other.priority:
+            if self.priority == other.priority: #if priority equals then check the order of creation
                 return self.count < other.count
             return self.priority < other.priority  
         
         def __str__(self):
             return f"priority: {self.priority}, cell: {self.cell}"
-    startCell = grid.locateStartCell()
+    startCell = grid.locateStartCell() #locate the start cell
     path = []
-    goalCells = grid.locateGoalCells()
+    goalCells = grid.locateGoalCells() #locate the goalcells
     goalCells.sort(key=lambda x: (x.x,x.y))
-    moves = [(0,-1),(-1,0),(0,1),(1,0)]
-    node = 1
+    moves = [(0,-1),(-1,0),(0,1),(1,0)] #up, left, down, right
+    node = 1 # count node
     
     forwardQueue = []
     forwardNode = Node(startCell,0,0)
@@ -358,19 +358,19 @@ def CUS2search(grid, draw = True):
     backwardVisited = {}
     backwardCost = {}
     
-    for goal in goalCells:
+    for goal in goalCells: #push all the goal cell into priority queue
         backwardNode = Node(goal, 0,node)
         heapq.heappush(backwardQueue, backwardNode)
         backwardVisited[goal] = [goal]
         backwardCost[goal] = 0
         node +=1
     visitedIntersection = None
-    minn = float('inf')
-    while forwardQueue and backwardQueue:
+    minn = float('inf') #threshold to check for the optimal path
+    while forwardQueue and backwardQueue: #while it is not empty
         forward = heapq.heappop(forwardQueue).cell
         if forward in backwardVisited:
-            x = forwardCost[forward] + backwardCost[forward]
-            if minn > x:
+            x = forwardCost[forward] + backwardCost[forward] #cost of the path
+            if minn > x: #update the new path if it is shorter
                 minn = x
                 visitedIntersection = forward
         if draw: #visualise when required
@@ -382,9 +382,9 @@ def CUS2search(grid, draw = True):
             if nextNode is None or nextNode.isWall() or  nextNode in forwardVisited:
                 continue
             
-            newCost = forwardCost[forward] + 1
+            newCost = forwardCost[forward] + 1 #new cost
             
-            if nextNode not in forwardCost or newCost < forwardCost[nextNode]:
+            if nextNode not in forwardCost or newCost < forwardCost[nextNode]: #update when not visited or new cost is better
                 forwardCost[nextNode] = newCost
                 priority = newCost + manhattanDistance1(nextNode, goalCells)
                 node +=1
@@ -413,7 +413,7 @@ def CUS2search(grid, draw = True):
                 continue
                         
             newCost = backwardCost[backward] + 1
-            if nextNode not in backwardCost or newCost < backwardCost[nextNode]:
+            if nextNode not in backwardCost or newCost < backwardCost[nextNode]: #update when not visited or new cost is better
                 backwardCost[nextNode] = newCost
                 priority = newCost + manhattanDistance(nextNode, startCell)
                 node+=1
@@ -425,12 +425,12 @@ def CUS2search(grid, draw = True):
                 backwardVisited[nextNode] = backwardVisited[backward] + [nextNode]
                 heapq.heappush(backwardQueue, temp)
         
-        if len(forwardQueue) ==0 or  len(backwardQueue) == 0:
+        if len(forwardQueue) ==0 or  len(backwardQueue) == 0: #if queuues are emoty break no solution found
             break
         
-        a = forwardQueue[0]
-        b = backwardQueue[0]
-        if minn <= max(a.priority,b.priority):
+        a = forwardQueue[0] #take the first element from forward queue
+        b = backwardQueue[0] #take the first element from backward queue
+        if minn <= max(a.priority,b.priority): #if there is possibly no shorter path found then break
             break
         
     if visitedIntersection is not None:

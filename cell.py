@@ -3,7 +3,7 @@ class Cell:
     def __init__(self, x,y ):
         self.x = x
         self.y = y
-        self.goal = False
+        self.goal = False 
         self.wall = False
         self.start = False
         self.visited = False
@@ -55,10 +55,10 @@ class Cell:
         self.onPath = False
         self.frontier = False
         
-    def __str__(self):
+    def __str__(self): #print the cell
         return f'row: {self.y}, col: {self.x}, goal: {self.goal}, wall: {self.wall}, start: {self.start}'
     
-    def draw(self,screen):
+    def draw(self,screen): #draw the GUI
         pygame.draw.rect(screen, (0,0,0), (self.row, self.column, self.width, self.width))
         if self.isWall():
             pygame.draw.rect(screen, (69,69,69), (self.row + self.padding, self.column + self.padding, self.width - self.padding*2, self.width- self.padding*2))

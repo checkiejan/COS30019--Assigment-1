@@ -8,7 +8,7 @@ class Button:
         self.y = y
         self.width = width
         self.height = height
-        self.text = text
+        self.text = text #the name of search function
         self.padding = 3
         self.text_surface = my_font.render(self.text, True, (0, 0, 0))
         self.func = None
